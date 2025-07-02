@@ -21,6 +21,12 @@ public enum LibraryManagerInstance {
     private SortStrategy sortStrategy;
     private final JsonLibraryPersistence persistence = JsonLibraryPersistence.INSTANCE;
 
+    // blocco di inizializzazione eseguito all'istanziazione di INSTANCE
+    {
+        List<IBook> loadedBooks = persistence.loadLibrary(null);
+        books.addAll(loadedBooks);
+    }
+
     public void setSortStrategy(SortStrategy strategy) {
         this.sortStrategy = strategy;
     }
@@ -33,17 +39,16 @@ public enum LibraryManagerInstance {
     }
 
     public void addBook(IBook book) {
-        caretaker.saveState(new LibraryMemento(new ArrayList<>(books))); // salva stato attuale (copia!)
+        caretaker.saveState(new LibraryMemento(new ArrayList<>(books))); // salva snapshot prima
         books.add(book);
-        persistence.saveBook(book);
+        persistence.saveLibrary(books);  // salva tutta la lista aggiornata
     }
 
     public void removeBook(IBook book) {
-        caretaker.saveState(new LibraryMemento(new ArrayList<>(books))); // salva stato attuale (copia!)
+        caretaker.saveState(new LibraryMemento(new ArrayList<>(books))); // salva snapshot prima
         books.remove(book);
-        persistence.removeBook(book);
+        persistence.saveLibrary(books);
     }
-
 
     public List<IBook> getBooks(BookFilterHandler filter) {
         return persistence.loadLibrary(filter);
@@ -60,6 +65,7 @@ public enum LibraryManagerInstance {
         if (previous != null) {
             books.clear();
             books.addAll(previous.getSavedState());
+            persistence.saveLibrary(books);  // aggiorna file JSON
             return true;
         }
         return false;
@@ -70,6 +76,7 @@ public enum LibraryManagerInstance {
         if (next != null) {
             books.clear();
             books.addAll(next.getSavedState());
+            persistence.saveLibrary(books);
             return true;
         }
         return false;
@@ -86,6 +93,7 @@ public enum LibraryManagerInstance {
     public void clearLibrary() {
         caretaker.saveState(new LibraryMemento(books));
         books.clear();
+        persistence.saveLibrary(books);
     }
 
     // Ricerca per titolo

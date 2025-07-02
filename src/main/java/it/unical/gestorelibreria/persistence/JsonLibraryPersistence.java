@@ -60,6 +60,12 @@ public enum JsonLibraryPersistence implements LibraryPersistence {
         }
     }
 
+    public synchronized void saveLibrary(List<IBook> books) {
+        cache.clear();
+        cache.addAll(books);
+        saveToDisk();
+    }
+
     private void saveToDisk() {
         try (FileWriter writer = new FileWriter(FILE_PATH)) {
             gson.toJson(cache, writer);

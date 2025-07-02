@@ -1,5 +1,7 @@
 package it.unical.gestorelibreria.command;
 
+import it.unical.gestorelibreria.controller.LibraryManagerInstance;
+
 import java.util.Stack;
 
 public class CommandInvoker {
@@ -12,10 +14,7 @@ public class CommandInvoker {
     }
 
     public void undoLastCommand() {
-        if (!history.isEmpty()) {
-            Command last = history.pop();
-            last.undo();
-        }
+        LibraryManagerInstance.INSTANCE.undo();
     }
 
     public void clearHistory() {

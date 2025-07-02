@@ -16,4 +16,6 @@ public interface LibraryPersistence {
      * Se filtro è null, restituisce tutti.
      */
     List<IBook> loadLibrary(BookFilterHandler filter);
+
+    void saveLibrary(List<IBook> books);
 }

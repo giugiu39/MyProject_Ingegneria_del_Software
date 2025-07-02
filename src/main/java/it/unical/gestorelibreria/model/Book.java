@@ -4,6 +4,8 @@ import it.unical.gestorelibreria.factory.BookAbstract;
 import it.unical.gestorelibreria.state.ReadingState;
 import it.unical.gestorelibreria.state.ToReadState;
 
+import java.util.Objects;
+
 public class Book extends BookAbstract {
 
     private String title;
@@ -102,6 +104,18 @@ public class Book extends BookAbstract {
     @Override
     public String toString() {
         return "[" + title + " by " + author + ", ISBN: " + isbn + ", Genre: " + genre + ", Rating: " + rating + ", State: " + getStateName() + "]";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Book other)) return false;
+        return Objects.equals(isbn, other.isbn);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(isbn);
     }
 
 }

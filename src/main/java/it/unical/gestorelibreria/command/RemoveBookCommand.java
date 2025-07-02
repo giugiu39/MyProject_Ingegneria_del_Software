@@ -16,8 +16,4 @@ public class RemoveBookCommand implements Command {
         LibraryManagerInstance.INSTANCE.removeBook(book);
     }
 
-    @Override
-    public void undo() {
-        LibraryManagerInstance.INSTANCE.addBook(book);
-    }
 }
