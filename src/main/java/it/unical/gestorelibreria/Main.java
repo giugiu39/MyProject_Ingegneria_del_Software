@@ -1,8 +1,5 @@
 package it.unical.gestorelibreria;
 
-import it.unical.gestorelibreria.factory.StandardBookCreator;
-import it.unical.gestorelibreria.model.IBook;
-
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {

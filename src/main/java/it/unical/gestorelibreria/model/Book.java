@@ -41,9 +41,7 @@ public class Book extends BookAbstract {
     }
 
     @Override
-    public String getIsbn() {
-        return isbn;
-    }
+    public String getIsbn() { return isbn; }
 
     @Override
     public String getGenre() {
