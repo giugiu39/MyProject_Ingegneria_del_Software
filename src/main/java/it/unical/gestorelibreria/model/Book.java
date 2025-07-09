@@ -15,19 +15,19 @@ public class Book extends BookAbstract {
     private transient ReadingState state;
     private String stateName;
 
-    public Book(String title, String author, String isbn, String genre, int rating) {
+    public Book(String title, String author, String isbn, String genre, int rating, ReadingState state) {
         this.title = title;
         this.author = author;
         this.isbn = isbn;
         this.genre = genre;
         this.rating = rating;
-        this.state = new ToReadState();
+        this.state = state;
         this.stateName = state.getStateName();
     }
 
     @Override
-    protected Book createBook(String title, String author, String isbn, String genre, int rating) {
-        return new Book(title, author, isbn, genre, rating);
+    protected Book createBook(String title, String author, String isbn, String genre, int rating, ReadingState state) {
+        return new Book(title, author, isbn, genre, rating, state);
     }
 
     // Getters

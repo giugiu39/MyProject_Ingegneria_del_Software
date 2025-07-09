@@ -114,8 +114,7 @@ public class BookFormDialog extends JDialog {
             };
 
             if (existing==null) {
-                Book newBook = new Book(t,a,i,g,r);
-                newBook.setState(state);
+                Book newBook = new Book(t,a,i,g,r,state);
                 book = newBook;
             } else {
                 existing.setTitle(t);
