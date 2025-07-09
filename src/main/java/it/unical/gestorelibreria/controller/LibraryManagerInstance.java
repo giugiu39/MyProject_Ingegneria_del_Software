@@ -50,29 +50,45 @@ public enum LibraryManagerInstance {
         persistence.saveLibrary(books);
     }
 
-    public List<IBook> getBooks(BookFilterHandler filter) {
-        return persistence.loadLibrary(filter);
-    }
-
     // Restituisce una copia immutabile della lista dei libri
     public List<IBook> getBooks() {
         return Collections.unmodifiableList(books);
     }
 
+    /**
+     * Restituisce lista di libri applicando un filtro (chain) e poi una strategia di ordinamento.
+     * Se filter è null viene ignorato; se sortStrategy è null, rimane l'ordine di inserimento.
+     */
+    public List<IBook> getBooks(BookFilterHandler filter) {
+        // Carica da persistence
+        List<IBook> loaded = persistence.loadLibrary(filter);
+        // Applica ordinamento se impostato
+        if (sortStrategy != null) {
+            return sortStrategy.sort(loaded);
+        }
+        return loaded;
+    }
+
+    public void saveLibrary() {
+        persistence.saveLibrary(books);
+    }
+
     // Operazioni Undo/Redo
     public boolean undo() {
-        LibraryMemento previous = caretaker.undo();
+        LibraryMemento current = new LibraryMemento(new ArrayList<>(books));
+        LibraryMemento previous = caretaker.undo(current);
         if (previous != null) {
             books.clear();
             books.addAll(previous.getSavedState());
-            persistence.saveLibrary(books);  // aggiorna file JSON
+            persistence.saveLibrary(books);
             return true;
         }
         return false;
     }
 
     public boolean redo() {
-        LibraryMemento next = caretaker.redo();
+        LibraryMemento current = new LibraryMemento(new ArrayList<>(books));
+        LibraryMemento next = caretaker.redo(current);
         if (next != null) {
             books.clear();
             books.addAll(next.getSavedState());

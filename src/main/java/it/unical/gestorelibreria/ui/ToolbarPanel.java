@@ -12,6 +12,9 @@ public class ToolbarPanel extends JPanel {
     private final CommandInvoker invoker = new CommandInvoker();
     private final BookTablePanel tablePanel;
 
+    private final JButton undoBtn = new JButton("Undo");
+    private final JButton redoBtn = new JButton("Redo");
+
     public ToolbarPanel(BookTablePanel tablePanel) {
         this.tablePanel = tablePanel;
         setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -19,15 +22,14 @@ public class ToolbarPanel extends JPanel {
         JButton addBtn = new JButton("Aggiungi");
         JButton editBtn = new JButton("Modifica");
         JButton delBtn = new JButton("Rimuovi");
-        JButton undoBtn= new JButton("Undo");
 
-        add(addBtn); add(editBtn); add(delBtn); add(undoBtn);
+        add(addBtn); add(editBtn); add(delBtn); add(undoBtn); add(redoBtn);
 
         addBtn.addActionListener(e -> {
             BookFormDialog dlg = new BookFormDialog(null, null);
             dlg.setVisible(true);
             IBook b = dlg.getBook();
-            if (b!=null) {
+            if (b != null) {
                 invoker.executeCommand(new AddBookCommand(b));
                 refreshTable();
             }
@@ -35,16 +37,20 @@ public class ToolbarPanel extends JPanel {
 
         editBtn.addActionListener(e -> {
             IBook sel = tablePanel.getSelectedBook();
-            if (sel!=null) {
+            if (sel != null) {
                 BookFormDialog dlg = new BookFormDialog(null, sel);
                 dlg.setVisible(true);
-                refreshTable();
+                IBook modified = dlg.getBook();
+                if (modified != null) {
+                    LibraryManagerInstance.INSTANCE.saveLibrary();
+                    refreshTable();
+                }
             }
         });
 
         delBtn.addActionListener(e -> {
             IBook sel = tablePanel.getSelectedBook();
-            if (sel!=null) {
+            if (sel != null) {
                 invoker.executeCommand(new RemoveBookCommand(sel));
                 refreshTable();
             }
@@ -54,11 +60,22 @@ public class ToolbarPanel extends JPanel {
             invoker.undoLastCommand();
             refreshTable();
         });
+
+        redoBtn.addActionListener(e -> {
+            invoker.redoLastCommand();
+            refreshTable();
+        });
+
+        refreshTable(); // inizializza lo stato dei pulsanti
     }
 
     private void refreshTable() {
         tablePanel.refreshData(
                 LibraryManagerInstance.INSTANCE.getBooks(null)
         );
+
+        // Aggiorna stato pulsanti Undo/Redo
+        undoBtn.setEnabled(LibraryManagerInstance.INSTANCE.canUndo());
+        redoBtn.setEnabled(LibraryManagerInstance.INSTANCE.canRedo());
     }
 }

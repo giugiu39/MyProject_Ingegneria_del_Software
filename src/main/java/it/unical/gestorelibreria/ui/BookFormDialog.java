@@ -1,19 +1,21 @@
 package it.unical.gestorelibreria.ui;
 
+import it.unical.gestorelibreria.controller.LibraryManagerInstance;
 import it.unical.gestorelibreria.model.IBook;
 import it.unical.gestorelibreria.model.Book;
 import it.unical.gestorelibreria.state.ReadState;
 import it.unical.gestorelibreria.state.ReadingInProgressState;
 import it.unical.gestorelibreria.state.ReadingState;
 import it.unical.gestorelibreria.state.ToReadState;
+import it.unical.gestorelibreria.utils.LibraryUtils;
+import it.unical.gestorelibreria.utils.ISBNUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 public class BookFormDialog extends JDialog {
-
-    private JTextField titleF, authorF, isbnF, genreF, ratingF;
+    private JTextField titleF, authorF, isbnF, ratingF;
+    private JComboBox<String> genreC;
     private JComboBox<String> stateC;
     private IBook book;
 
@@ -25,111 +27,99 @@ public class BookFormDialog extends JDialog {
         titleF  = new JTextField();
         authorF = new JTextField();
         isbnF   = new JTextField();
-        genreF  = new JTextField();
         ratingF = new JTextField();
+
+        // nuovo combo per genere
+        genreC = new JComboBox<>(LibraryUtils.GENERI);
+
         stateC  = new JComboBox<>(new String[]{"TO_READ","READING","READ"});
 
         if (existing != null) {
             titleF.setText(existing.getTitle());
             authorF.setText(existing.getAuthor());
             isbnF.setText(existing.getIsbn());
-            genreF.setText(existing.getGenre());
+            isbnF.setEditable(false); // ISBN non modificabile
             ratingF.setText(String.valueOf(existing.getRating()));
+            genreC.setSelectedItem(existing.getGenre());
             stateC.setSelectedItem(existing.getStateName());
         }
 
-        add(new JLabel("Titolo:"));  add(titleF);
-        add(new JLabel("Autore:")); add(authorF);
+        add(new JLabel("Titolo:"));       add(titleF);
+        add(new JLabel("Autore:"));       add(authorF);
         add(new JLabel("ISBN:"));
-
         JPanel isbnPanel = new JPanel(new BorderLayout());
         isbnPanel.add(isbnF, BorderLayout.CENTER);
-
         if (existing != null) {
-            isbnF.setEditable(false); // Rende il campo non modificabile
             JLabel note = new JLabel(" (non modificabile)");
             note.setFont(note.getFont().deriveFont(Font.ITALIC, 10f));
-            note.setForeground(Color.GRAY); // colore grigio per renderlo discreto
+            note.setForeground(Color.GRAY);
             isbnPanel.add(note, BorderLayout.EAST);
         }
-
         add(isbnPanel);
 
-        add(new JLabel("Genere:"));  add(genreF);
-        add(new JLabel("Valutazione:")); add(ratingF);
-        add(new JLabel("Stato lettura:")); add(stateC);
+        add(new JLabel("Genere:"));       add(genreC);
+        add(new JLabel("Valutazione (0-10):"));  add(ratingF);
+        add(new JLabel("Stato lettura:"));add(stateC);
 
-        JButton ok = new JButton("OK");
+        JButton ok     = new JButton("OK");
         JButton cancel = new JButton("Annulla");
         add(ok); add(cancel);
 
         ok.addActionListener(e -> onOK(existing));
         cancel.addActionListener(e -> onCancel());
 
-        pack(); // ridimensiona finestra
-        setLocationRelativeTo(owner); // la centra rispetto alla finestra padre
+        pack();
+        setLocationRelativeTo(owner);
     }
 
     private void onOK(IBook existing) {
         try {
             String t = titleF.getText().trim();
             String a = authorF.getText().trim();
-            String i = isbnF.getText().trim();
-            String g = genreF.getText().trim();
+            String iRaw = isbnF.getText().trim();
+            String i = ISBNUtils.cleanIsbn(iRaw);
+            String g = (String)genreC.getSelectedItem();
             String rText = ratingF.getText().trim();
             String s = (String)stateC.getSelectedItem();
 
-            // Validazioni campi obbligatori
-            if (t.isEmpty() || a.isEmpty() || i.isEmpty() || g.isEmpty() || rText.isEmpty()) {
+            // validazione campi obbligatori
+            if (t.isEmpty()||a.isEmpty()||i.isEmpty()||g.isEmpty()||rText.isEmpty()) {
                 throw new IllegalArgumentException("Tutti i campi sono obbligatori.");
             }
 
-            // ISBN deve essere numerico
-            if (!i.matches("\\d+")) {
-                throw new IllegalArgumentException("L'ISBN deve contenere solo cifre.");
+            // Validazione ISBN-10 o ISBN-13
+            if (!ISBNUtils.isValidIsbn(i)) {
+                throw new IllegalArgumentException("ISBN non valido. Deve essere ISBN-10 o ISBN-13 corretto.");
             }
 
-            // Genere non deve essere numerico
-            if (g.matches("\\d+")) {
-                throw new IllegalArgumentException("Il genere non può essere solo numerico.");
-            }
-
-            // Rating deve essere un intero tra 0 e 10
+            // rating intero 0–10
             int r = Integer.parseInt(rText);
-            if (r < 0 || r > 10) {
-                throw new IllegalArgumentException("Il rating deve essere compreso tra 0 e 10.");
+            if (r<0||r>10) {
+                throw new IllegalArgumentException("Rating deve essere tra 0 e 10.");
             }
 
-            // Stato lettura fallback
-            if (s == null) {
-                s = "TO_READ";
-            }
-
-            // Verifica ISBN univoco solo per nuovi libri
-            if (existing == null) {
-                for (IBook b : it.unical.gestorelibreria.controller.LibraryManagerInstance.INSTANCE.getBooks(null)) {
-                    if (b.getIsbn().equals(i)) {
-                        throw new IllegalArgumentException("Esiste già un libro con questo ISBN.");
-                    }
+            // validazione ISBN univoco se nuovo
+            if (existing==null) {
+                for (IBook b : LibraryManagerInstance.INSTANCE.getBooks(null)) {
+                    if (ISBNUtils.cleanIsbn(b.getIsbn()).equals(i))
+                        throw new IllegalArgumentException("ISBN già presente.");
                 }
             }
 
-            // Stato lettura
+            // stato via state pattern
             ReadingState state = switch (s) {
                 case "READING" -> new ReadingInProgressState();
                 case "READ"    -> new ReadState();
                 default        -> new ToReadState();
             };
 
-            // Crea o aggiorna
-            if (existing == null) {
-                Book newBook = new Book(t, a, i, g, r);
+            if (existing==null) {
+                Book newBook = new Book(t,a,i,g,r);
                 newBook.setState(state);
                 book = newBook;
             } else {
                 existing.setTitle(t);
                 existing.setAuthor(a);
-                existing.setIsbn(i);
                 existing.setGenre(g);
                 existing.setRating(r);
                 existing.setState(state);
@@ -144,13 +134,11 @@ public class BookFormDialog extends JDialog {
         }
     }
 
-
     private void onCancel() {
         book = null;
         dispose();
     }
 
-    /** Restituisce il libro creato o modificato, o null se annullato */
     public IBook getBook() {
         return book;
     }

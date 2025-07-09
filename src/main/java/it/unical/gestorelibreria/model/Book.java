@@ -1,8 +1,7 @@
 package it.unical.gestorelibreria.model;
 
 import it.unical.gestorelibreria.factory.BookAbstract;
-import it.unical.gestorelibreria.state.ReadingState;
-import it.unical.gestorelibreria.state.ToReadState;
+import it.unical.gestorelibreria.state.*;
 
 import java.util.Objects;
 
@@ -13,7 +12,8 @@ public class Book extends BookAbstract {
     private String isbn;
     private String genre;
     private int rating;
-    private ReadingState state;
+    private transient ReadingState state;
+    private String stateName;
 
     public Book(String title, String author, String isbn, String genre, int rating) {
         this.title = title;
@@ -22,6 +22,7 @@ public class Book extends BookAbstract {
         this.genre = genre;
         this.rating = rating;
         this.state = new ToReadState();
+        this.stateName = state.getStateName();
     }
 
     @Override
@@ -81,10 +82,16 @@ public class Book extends BookAbstract {
 
     public void setState(ReadingState state) {
         this.state = state;
+        this.stateName = state.getStateName();
     }
 
     public ReadingState getState() {
-        return state;
+        // ricostruisco l'oggetto state da stateName
+        return state = switch(stateName) {
+            case "READING" -> new ReadingInProgressState();
+            case "READ"    -> new ReadState();
+            default        -> new ToReadState();
+        };
     }
 
     public void next() {
@@ -96,7 +103,7 @@ public class Book extends BookAbstract {
     }
 
     public String getStateName() {
-        return state.getStateName();
+        return stateName;
     }
 
     @Override

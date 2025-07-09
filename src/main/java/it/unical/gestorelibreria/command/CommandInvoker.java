@@ -17,6 +17,8 @@ public class CommandInvoker {
         LibraryManagerInstance.INSTANCE.undo();
     }
 
+    public void redoLastCommand() { LibraryManagerInstance.INSTANCE.redo(); }
+
     public void clearHistory() {
         history.clear();
     }

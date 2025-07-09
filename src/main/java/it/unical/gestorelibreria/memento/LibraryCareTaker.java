@@ -9,23 +9,25 @@ public class LibraryCareTaker {
 
     public void saveState(LibraryMemento memento) {
         undoStack.push(memento);
-        redoStack.clear(); // Invalida redo su nuova azione
+        redoStack.clear(); // invalida redo perché nuova azione
     }
 
-    public LibraryMemento undo() {
+    public LibraryMemento undo(LibraryMemento currentState) {
         if (!undoStack.isEmpty()) {
-            LibraryMemento memento = undoStack.pop();
-            redoStack.push(memento);
-            return memento;
+            // Sposta lo stato corrente in redoStack
+            redoStack.push(currentState);
+            // Prendi lo stato precedente da undoStack
+            return undoStack.pop();
         }
         return null;
     }
 
-    public LibraryMemento redo() {
+    public LibraryMemento redo(LibraryMemento currentState) {
         if (!redoStack.isEmpty()) {
-            LibraryMemento memento = redoStack.pop();
-            undoStack.push(memento);
-            return memento;
+            // Sposta lo stato corrente in undoStack
+            undoStack.push(currentState);
+            // Prendi lo stato da redoStack
+            return redoStack.pop();
         }
         return null;
     }

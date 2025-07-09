@@ -52,7 +52,7 @@ public enum JsonLibraryPersistence implements LibraryPersistence {
     private Set<IBook> loadFromDisk() {
         try (FileReader reader = new FileReader(FILE_PATH)) {
             Type listType = new TypeToken<List<Book>>(){}.getType();
-            List<Book> loadedBooks = gson.fromJson(reader, listType);
+            List<Book> loadedBooks = gson.fromJson(reader, new TypeToken<List<Book>>(){}.getType());
             return loadedBooks != null ? new HashSet<>(loadedBooks) : new HashSet<>();
         } catch (Exception e) {
             return new HashSet<>();
