@@ -58,7 +58,7 @@ public class BookFormDialog extends JDialog {
         add(isbnPanel);
 
         add(new JLabel("Genere:"));       add(genreC);
-        add(new JLabel("Valutazione (0-10):"));  add(ratingF);
+        add(new JLabel("Valutazione (1-5):"));  add(ratingF);
         add(new JLabel("Stato lettura:"));add(stateC);
 
         JButton ok     = new JButton("OK");
@@ -94,8 +94,8 @@ public class BookFormDialog extends JDialog {
 
             // rating intero 0–10
             int r = Integer.parseInt(rText);
-            if (r<0||r>10) {
-                throw new IllegalArgumentException("Rating deve essere tra 0 e 10.");
+            if (r<1||r>5) {
+                throw new IllegalArgumentException("Rating deve essere tra 1 e 5.");
             }
 
             // validazione ISBN univoco se nuovo
