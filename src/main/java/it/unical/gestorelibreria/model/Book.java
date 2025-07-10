@@ -2,6 +2,7 @@ package it.unical.gestorelibreria.model;
 
 import it.unical.gestorelibreria.factory.BookAbstract;
 import it.unical.gestorelibreria.state.*;
+import it.unical.gestorelibreria.utils.ISBNUtils;
 
 import java.util.Objects;
 
@@ -16,6 +17,16 @@ public class Book extends BookAbstract {
     private String stateName;
 
     public Book(String title, String author, String isbn, String genre, int rating, ReadingState state) {
+        if (title == null || title.isEmpty())
+            throw new IllegalArgumentException("Titolo non valido");
+        if (author == null || author.isEmpty())
+            throw new IllegalArgumentException("Autore non valido");
+        if (!ISBNUtils.isValidIsbn(isbn))
+            throw new IllegalArgumentException("ISBN non valido");
+        if (rating < 1 || rating > 5)
+            throw new IllegalArgumentException("Valutazione non valida");
+        if (state == null)
+            throw new IllegalArgumentException("Stato non può essere nullo");
         this.title = title;
         this.author = author;
         this.isbn = isbn;

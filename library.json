@@ -1,42 +1,18 @@
 [
   {
-    "title": "Son caduto",
-    "author": "Articolo33",
-    "isbn": "9783161484100",
-    "genre": "Romanzo",
-    "rating": 5,
-    "stateName": "TO_READ"
-  },
-  {
-    "title": "Sempre tu",
-    "author": "Williamm",
-    "isbn": "9780743273565",
-    "genre": "Fumetto",
-    "rating": 2,
-    "stateName": "READING"
-  },
-  {
-    "title": "Ci son cascato di nuovo",
-    "author": "Author556",
-    "isbn": "9780140449136",
-    "genre": "Fantascienza",
+    "title": "mim",
+    "author": "djehdieid",
+    "isbn": "9780306406157",
+    "genre": "Giallo",
     "rating": 4,
     "stateName": "READING"
   },
   {
-    "title": "Prontissimo",
-    "author": "Gianlucaa",
-    "isbn": "9781402894626",
+    "title": "Gianluca",
+    "author": "giu",
+    "isbn": "0306406152",
     "genre": "Romanzo",
-    "rating": 3,
+    "rating": 5,
     "stateName": "TO_READ"
-  },
-  {
-    "title": "Noi solo noii",
-    "author": "Mimi02",
-    "isbn": "9780679745587",
-    "genre": "Giallo",
-    "rating": 1,
-    "stateName": "READING"
   }
 ]
