@@ -1,17 +1,9 @@
 [
   {
-    "title": "mim",
-    "author": "djehdieid",
-    "isbn": "9780306406157",
-    "genre": "Giallo",
-    "rating": 4,
-    "stateName": "READING"
-  },
-  {
-    "title": "Gianluca",
-    "author": "giu",
-    "isbn": "0306406152",
-    "genre": "Romanzo",
+    "title": "Ubik",
+    "author": "Philip K. Dick",
+    "isbn": "9780547572291",
+    "genre": "Fantascienza",
     "rating": 5,
     "stateName": "TO_READ"
   }
