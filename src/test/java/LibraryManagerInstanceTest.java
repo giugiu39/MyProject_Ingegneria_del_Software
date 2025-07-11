@@ -170,12 +170,6 @@ public class LibraryManagerInstanceTest {
         );
     }
 
-    @Disabled("Work in progress: implementare test di persistenza avanzata")
-    @Test
-    void disabledTestPersistence() {
-        // Test disabilitato
-    }
-
     @EnabledOnOs(OS.WINDOWS)
     @Test
     @DisplayName("Test eseguito solo su sistema Windows")
@@ -183,10 +177,4 @@ public class LibraryManagerInstanceTest {
         assertTrue(System.getProperty("os.name").toLowerCase().contains("win"));
     }
 
-    @EnabledOnJre(JRE.JAVA_17)
-    @Test
-    @DisplayName("Test eseguito solo con Java 17")
-    void testOnlyOnJava17() {
-        assertEquals(17, Runtime.version().feature());
-    }
 }

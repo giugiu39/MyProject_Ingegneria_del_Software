@@ -1,10 +1,26 @@
 [
   {
-    "title": "Ubik",
-    "author": "Philip K. Dick",
-    "isbn": "9780547572291",
-    "genre": "Fantascienza",
+    "title": "Il mostro",
+    "author": "Gianluca",
+    "isbn": "9780306406157",
+    "genre": "Romanzo",
     "rating": 5,
+    "stateName": "READING"
+  },
+  {
+    "title": "Sono sempre io",
+    "author": "Martina",
+    "isbn": "9781566199094",
+    "genre": "Thriller",
+    "rating": 4,
     "stateName": "TO_READ"
+  },
+  {
+    "title": "Luigi e mario",
+    "author": "Stef",
+    "isbn": "0201530821",
+    "genre": "Biografia",
+    "rating": 3,
+    "stateName": "READ"
   }
 ]

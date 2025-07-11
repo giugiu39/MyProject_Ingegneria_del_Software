@@ -41,7 +41,7 @@ public enum JsonLibraryPersistence implements LibraryPersistence {
 
     @Override
     public synchronized List<IBook> loadLibrary(BookFilterHandler filter) {
-        Collection<IBook> booksToFilter = Collections.unmodifiableSet(cache);
+        Set<IBook> booksToFilter = loadFromDisk();
         if (filter == null) {
             return new ArrayList<>(booksToFilter);
         } else {

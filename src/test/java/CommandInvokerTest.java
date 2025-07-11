@@ -44,7 +44,7 @@ public class CommandInvokerTest {
     void testRemoveBookCommand() {
         // Prepara stato: inserisco prima un libro
         IBook book = new Book("Neuromante", "William Gibson", "9780441569595",
-                "Cyberpunk", 5, new ToReadState());
+                "Altro", 5, new ToReadState());
         manager.addBook(book);
         assertEquals(1, manager.getBooks().size());
 
@@ -57,7 +57,7 @@ public class CommandInvokerTest {
     @DisplayName("Undo/Redo tramite CommandInvoker")
     void testUndoRedo() {
         IBook b1 = new Book("Fahrenheit 451", "Ray Bradbury", "9781451673319",
-                "Distopico", 5, new ToReadState());
+                "Altro", 5, new ToReadState());
         IBook b2 = new Book("Il Gattopardo", "Tomasi di Lampedusa", "9788845291593",
                 "Romanzo", 4, new ToReadState());
 
@@ -116,8 +116,8 @@ public class CommandInvokerTest {
     @ValueSource(strings = {"Metro 2033", "Metro 2034"})
     @DisplayName("RemoveBookCommand rimuove solo il libro giusto")
     void testParameterizedRemove(String titleToRemove) {
-        IBook b1 = new Book("Metro 2033", "Dmitry Glukhovsky", "9780575086258", "Post-Apocalittico", 4, new ToReadState());
-        IBook b2 = new Book("Metro 2034", "Dmitry Glukhovsky", "9780575091221", "Post-Apocalittico", 4, new ToReadState());
+        IBook b1 = new Book("Metro 2033", "Dmitry Glukhovsky", "9780575086258", "Altro", 4, new ToReadState());
+        IBook b2 = new Book("Metro 2034", "Dmitry Glukhovsky", "9780575091221", "Altro", 4, new ToReadState());
 
         manager.addBook(b1);
         manager.addBook(b2);
@@ -202,6 +202,5 @@ public class CommandInvokerTest {
         invoker.undoLastCommand(); // rimuove A
         assertTrue(manager.getBooks().isEmpty());
     }
-
 
 }
