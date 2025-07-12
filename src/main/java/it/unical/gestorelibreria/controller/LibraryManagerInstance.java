@@ -31,20 +31,13 @@ public enum LibraryManagerInstance {
         this.sortStrategy = strategy;
     }
 
-    public List<IBook> getSortedBooks() {
-        if (sortStrategy == null) {
-            return getBooks();
-        }
-        return sortStrategy.sort(getBooks());
-    }
-
-    public void addBook(IBook book) {
+    public synchronized void addBook(IBook book) {
         caretaker.saveState(new LibraryMemento(new ArrayList<>(books))); // salva snapshot prima
         books.add(book);
         persistence.saveLibrary(books);  // salva tutta la lista aggiornata
     }
 
-    public void removeBook(IBook book) {
+    public synchronized void removeBook(IBook book) {
         caretaker.saveState(new LibraryMemento(new ArrayList<>(books))); // salva snapshot prima
         books.remove(book);
         persistence.saveLibrary(books);
@@ -69,7 +62,7 @@ public enum LibraryManagerInstance {
         return loaded;
     }
 
-    public void updateBook(IBook original, IBook updated) {
+    public synchronized void updateBook(IBook original, IBook updated) {
         caretaker.saveState(new LibraryMemento(new ArrayList<>(books)));
         int index = books.indexOf(original);
         if (index != -1) {
@@ -78,12 +71,12 @@ public enum LibraryManagerInstance {
         }
     }
 
-    public void saveLibrary() {
+    public synchronized void saveLibrary() {
         persistence.saveLibrary(books);
     }
 
     // Operazioni Undo/Redo
-    public boolean undo() {
+    public synchronized boolean undo() {
         LibraryMemento current = new LibraryMemento(new ArrayList<>(books));
         LibraryMemento previous = caretaker.undo(current);
         if (previous != null) {
@@ -95,7 +88,7 @@ public enum LibraryManagerInstance {
         return false;
     }
 
-    public boolean redo() {
+    public synchronized boolean redo() {
         LibraryMemento current = new LibraryMemento(new ArrayList<>(books));
         LibraryMemento next = caretaker.redo(current);
         if (next != null) {
@@ -115,7 +108,7 @@ public enum LibraryManagerInstance {
         return caretaker.canRedo();
     }
 
-    public void clearLibrary() {
+    public synchronized void clearLibrary() {
         caretaker.saveState(new LibraryMemento(books));
         books.clear();
         persistence.saveLibrary(books);
