@@ -22,15 +22,15 @@ public class SearchPanel extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createTitledBorder("Ricerca & Filtri"));
 
-        // Primo rigo: testo + filtri
+        // testo + filtri
         JPanel top = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JTextField txt = new JTextField(20);
         JButton btnSearch = new JButton("Cerca");
-        JButton btnFilter = new JButton("Filtri…");
+        JButton btnFilter = new JButton("Filtri");
         top.add(new JLabel("Testo:")); top.add(txt);
         top.add(btnSearch); top.add(btnFilter);
 
-        // Secondo rigo: ordinamento + reverse
+        // ordinamento + reverse
         JPanel bot = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JComboBox<String> cbOrder = new JComboBox<>(new String[]{"Titolo","Autore","Valutazione"});
         JButton btnReverse = new JButton("↑");
@@ -54,14 +54,14 @@ public class SearchPanel extends JPanel {
             applySearch(f);
         });
 
-        // listener Filtri…
+        // listener Filtri
         btnFilter.addActionListener(e -> {
             FilterDialog dlg = new FilterDialog((Window) SwingUtilities.getWindowAncestor(this));
             dlg.setVisible(true);
             currentFilter = dlg.getFilterChain();
         });
 
-        // listener ordine
+        // listener Ordine
         cbOrder.addActionListener(e -> {
             String sel = (String) cbOrder.getSelectedItem();
             baseSortStrategy = switch(sel) {

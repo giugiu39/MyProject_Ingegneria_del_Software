@@ -69,6 +69,15 @@ public enum LibraryManagerInstance {
         return loaded;
     }
 
+    public void updateBook(IBook original, IBook updated) {
+        caretaker.saveState(new LibraryMemento(new ArrayList<>(books)));
+        int index = books.indexOf(original);
+        if (index != -1) {
+            books.set(index, updated);
+            persistence.saveLibrary(books);
+        }
+    }
+
     public void saveLibrary() {
         persistence.saveLibrary(books);
     }

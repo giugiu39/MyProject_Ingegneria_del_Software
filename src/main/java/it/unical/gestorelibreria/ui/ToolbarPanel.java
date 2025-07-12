@@ -42,11 +42,12 @@ public class ToolbarPanel extends JPanel {
                 dlg.setVisible(true);
                 IBook modified = dlg.getBook();
                 if (modified != null) {
-                    LibraryManagerInstance.INSTANCE.saveLibrary();
+                    invoker.executeCommand(new UpdateBookCommand(sel, modified));
                     refreshTable();
                 }
             }
         });
+
 
         delBtn.addActionListener(e -> {
             IBook sel = tablePanel.getSelectedBook();

@@ -124,8 +124,10 @@ public class Book extends BookAbstract {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Book other)) return false;
+        if (this == o)
+            return true;
+        if (!(o instanceof Book other))
+            return false;
         return Objects.equals(isbn, other.isbn);
     }
 

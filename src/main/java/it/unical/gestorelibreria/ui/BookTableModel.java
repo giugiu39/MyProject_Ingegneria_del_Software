@@ -7,7 +7,7 @@ import java.util.List;
 
 public class BookTableModel extends AbstractTableModel {
     private final String[] columns = {
-            "Titolo","Autore","ISBN","Genere","Rating","Stato"
+            "Titolo","Autore","ISBN","Genere","Rating","Stato lettura"
     };
     private List<IBook> books = new ArrayList<>();
 

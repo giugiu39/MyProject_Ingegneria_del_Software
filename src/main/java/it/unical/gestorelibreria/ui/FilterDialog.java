@@ -45,13 +45,19 @@ public class FilterDialog extends JDialog {
             }
             if (cbState.isSelected()) {
                 BookFilterHandler f = new StateFilter((String)stateBox.getSelectedItem());
-                if (head==null) head = tail = f;
-                else { tail.setNext(f); tail = f; }
+                if (head==null)
+                    head = tail = f;
+                else {
+                    tail.setNext(f);
+                    tail = f; }
             }
             if (cbRating.isSelected()) {
                 BookFilterHandler f = new RatingFilter((Integer)spMin.getValue());
-                if (head==null) head = tail = f;
-                else { tail.setNext(f); tail = f; }
+                if (head==null)
+                    head = tail = f;
+                else {
+                    tail.setNext(f);
+                    tail = f; }
             }
             this.chain = head; // null = nessun filtro
             dispose();

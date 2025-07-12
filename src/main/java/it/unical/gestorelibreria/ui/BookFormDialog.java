@@ -61,7 +61,7 @@ public class BookFormDialog extends JDialog {
         add(new JLabel("Valutazione (1-5):"));  add(ratingF);
         add(new JLabel("Stato lettura:"));add(stateC);
 
-        JButton ok     = new JButton("OK");
+        JButton ok = new JButton("OK");
         JButton cancel = new JButton("Annulla");
         add(ok); add(cancel);
 
