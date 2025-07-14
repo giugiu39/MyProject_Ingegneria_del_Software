@@ -9,7 +9,7 @@ public class SortByRating implements SortStrategy {
     @Override
     public List<IBook> sort(List<IBook> books) {
         return books.stream()
-                .sorted((b1, b2) -> Integer.compare(b2.getRating(), b1.getRating()))  // dal più alto al più basso
+                .sorted((b1, b2) -> Integer.compare(b1.getRating(), b2.getRating()))
                 .collect(Collectors.toList());
     }
 }

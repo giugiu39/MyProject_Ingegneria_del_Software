@@ -93,9 +93,9 @@ public class SortTest {
             SortStrategy sorter = new SortByRating();
             List<IBook> sorted = sorter.sort(books);
 
-            assertEquals(5, sorted.get(0).getRating());
+            assertEquals(3, sorted.get(0).getRating());
             assertEquals(4, sorted.get(1).getRating());
-            assertEquals(3, sorted.get(2).getRating());
+            assertEquals(5, sorted.get(2).getRating());
         }
     }
 
@@ -119,9 +119,9 @@ public class SortTest {
             SortStrategy sorter = new ReverseSortDecorator(new SortByRating());
             List<IBook> sorted = sorter.sort(books);
 
-            assertEquals(3, sorted.get(0).getRating());
+            assertEquals(5, sorted.get(0).getRating());
             assertEquals(4, sorted.get(1).getRating());
-            assertEquals(5, sorted.get(2).getRating());
+            assertEquals(3, sorted.get(2).getRating());
         }
 
         @Test

@@ -45,48 +45,55 @@ public class LibraryManagerInstanceTest {
     }
 
     @Test
-    @DisplayName("Aggiunta multipla di libri con stati diversi")
-    void testAddMultipleBooksWithStates() {
+    @DisplayName("Aggiunta di 100 libri con titoli univoci e stati diversi")
+    void testAdd100BooksWithUniqueIsbn() {
         int initialSize = manager.getBooks().size();
 
         ReadingState[] states = {
                 new ToReadState(),
                 new ReadingInProgressState(),
-                new ReadState(),
-                new ToReadState(),
                 new ReadState()
         };
 
-        String[] validIsbns = {
-                "9788804668794",
-                "0306406152",
-                "9780134685991",
-                "9780321356680",
-                "9781491950357"
-        };
+        for (int i = 0; i < 100; i++) {
+            String isbn = generateIsbn13(978000000000L + i); // definita più in basso
 
-        for (int i = 0; i < 5; i++) {
             Book book = new Book(
-                    "Titolo " + (i + 1),
-                    "Autore " + (i + 1),
-                    validIsbns[i],
+                    "Titolo " + i,
+                    "Autore " + i,
+                    isbn,
                     LibraryUtils.GENERI[i % LibraryUtils.GENERI.length],
                     (i % 5) + 1,
-                    states[i]
+                    states[i % states.length]
             );
+
             manager.addBook(book);
         }
 
         List<IBook> books = manager.getBooks();
-        assertEquals(initialSize + 5, books.size());
+        assertEquals(initialSize + 100, books.size());
 
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 0; i < 100; i++) {
             String expectedTitle = "Titolo " + i;
             assertTrue(
                     books.stream().anyMatch(b -> b.getTitle().equals(expectedTitle)),
                     "Libro con titolo '" + expectedTitle + "' non trovato"
             );
         }
+    }
+
+    /**
+     * Genera un ISBN-13 valido a partire da un numero base (12 cifre), calcolando il check digit.
+     */
+    private String generateIsbn13(long base) {
+        String baseStr = String.format("%012d", base);
+        int sum = 0;
+        for (int i = 0; i < 12; i++) {
+            int digit = Character.getNumericValue(baseStr.charAt(i));
+            sum += (i % 2 == 0) ? digit : digit * 3;
+        }
+        int checkDigit = (10 - (sum % 10)) % 10;
+        return baseStr + checkDigit;
     }
 
     @Test
@@ -110,7 +117,7 @@ public class LibraryManagerInstanceTest {
     @Test
     @DisplayName("clearLibrary svuota correttamente la libreria")
     void testClearLibrary() {
-        Book book = new Book("Titolo", "Autore", "0451524934", "Romanzo", 5, new ToReadState());
+        Book book = new Book("Titolo1", "Autore1", "0451524934", "Romanzo", 5, new ToReadState());
         manager.addBook(book);
         assertFalse(manager.getBooks().isEmpty());
 

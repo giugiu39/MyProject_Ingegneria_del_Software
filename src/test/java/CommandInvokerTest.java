@@ -22,8 +22,8 @@ public class CommandInvokerTest {
     @BeforeEach
     void setUp() {
         manager = LibraryManagerInstance.INSTANCE;
-        manager.clearLibrary();          // Reset dello stato della libreria
-        invoker = new CommandInvoker();  // Nuovo invoker per ogni test
+        manager.clearLibrary();
+        invoker = new CommandInvoker();
     }
 
     @Test
@@ -81,8 +81,8 @@ public class CommandInvokerTest {
     @Test
     @DisplayName("Remove + Undo + Redo")
     void testRemoveUndoRedo() {
-        IBook b = new Book("1984", "Orwell", "0451524934",
-                "Romanzo", 5, new ToReadState());
+        IBook b = new Book("1984", "Orwell", "0451524934", "Romanzo", 5, new ToReadState());
+
         // Aggiungo e poi rimuovo
         invoker.executeCommand(new AddBookCommand(b));
         invoker.executeCommand(new RemoveBookCommand(b));
@@ -185,9 +185,9 @@ public class CommandInvokerTest {
     @Test
     @DisplayName("Undo multipli funzionano in ordine inverso")
     void testUndoOrder() {
-        IBook b1 = new Book("A", "Autore", "9788804704454", "Genere", 1, new ToReadState());
-        IBook b2 = new Book("B", "Autore", "9780547572291", "Genere", 1, new ToReadState());
-        IBook b3 = new Book("C", "Autore", "9780140449136", "Genere", 1, new ToReadState());
+        IBook b1 = new Book("A", "Autore", "9788804704454", "Romanzo", 1, new ToReadState());
+        IBook b2 = new Book("B", "Autore", "9780547572291", "Thriller", 1, new ToReadState());
+        IBook b3 = new Book("C", "Autore", "9780140449136", "Fantasy", 1, new ToReadState());
 
         invoker.executeCommand(new AddBookCommand(b1));
         invoker.executeCommand(new AddBookCommand(b2));
