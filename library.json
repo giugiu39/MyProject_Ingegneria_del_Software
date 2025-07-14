@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "title": "Alberi infiniti",
+    "author": "Anita",
+    "isbn": "9781566199094",
+    "genre": "Saggio",
+    "rating": 4,
+    "stateName": "READING"
+  },
+  {
+    "title": "Sonoio",
+    "author": "Gianluca",
+    "isbn": "9781402894626",
+    "genre": "Romanzo",
+    "rating": 1,
+    "stateName": "TO_READ"
+  }
+]
